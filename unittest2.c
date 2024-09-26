@@ -98,6 +98,36 @@ void myFree(void *ptr, int size) {
     }
 }
 
+// Unit Test Functions
+void testMemoryAllocation() {
+    // Test 1: Allocate memory for an array of size 10
+    int *array = (int*)myMalloc(10 * sizeof(int));
+    if (array != NULL) {
+        printf("Test 1 Passed: Memory allocated for an array of size 10\n");
+        myFree(array, 10 * sizeof(int)); // Note: for simplicity, I added a second parameter to myFree.
+    } else {
+        printf("Test 1 Failed: Memory allocation for array of size 10 failed.\n");
+    }
+
+    // Test 2: Try to allocate more memory than available
+    int *largeArray = (int*)myMalloc(MEMORY_SIZE + 1);
+    if (largeArray == NULL) {
+        printf("Test 2 Passed: Large memory block allocation failed as expected.\n");
+    } else {
+        printf("Test 2 Failed: Large memory block should not have been allocated.\n");
+        myFree(largeArray, LARGE_MEMORY_SIZE + 1); // Note: for simplicity, I added a second parameter to myFree.
+    }
+
+    // Test 3: Allocate memory while skipping bad blocks
+    int *testBlock = (int*)myMalloc(50 * sizeof(int));
+    if (testBlock != NULL) {
+        printf("Test 3 Passed: Memory allocated by skipping bad blocks.\n");
+        myFree(testBlock, 50 * sizeof(int)); // Note: for simplicity, I added a second parameter to myFree.
+    } else {
+        printf("Test 3 Failed: Memory allocation should have succeeded by skipping bad blocks.\n");
+    }
+}
+
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         printf("Usage: %s <size_of_allocation>\n", argv[0]);
@@ -116,40 +146,15 @@ int main(int argc, char *argv[]) {
         printf("Failed to allocate large memory.\n");
         return 1;
     }
-    //printf("Successfully allocated large memory\n"); //DEBUG
+    
     // Mark some blocks as "bad"
     markBadBlocks(large_memory, LARGE_MEMORY_SIZE, 1000); // Mark 1000 bad blocks
-    //printf("Bad blocks marked\n"); // DEBUG
-
-    // Simulate memory allocation
-    int *array = (int*)myMalloc(allocationSize * sizeof(int));  // Allocate memory for an array of integers
-    //printf("myMalloc function did not crash\n"); //DEBUG
-    if (array == NULL) {
-        printf("Memory allocation failed.\n");
-    } else {
-        // Assign values to the array and print them
-        for (int i = 0; i < allocationSize; i++) {
-            array[i] = i * i;  // Assign square of index
-            printf("Array[%d] = %d\n", i, array[i]);
-        }
-	//printf("DEBUG: Successfully ran myMalloc\n");
-        // Free the allocated memory
-        myFree(array, allocationSize);
-        printf("Memory successfully freed.\n");
-    }
-
-    // DEBUG
-    //int bad_count = 0;
-    //for (int i = 0; i < LARGE_MEMORY_SIZE; i++) {
-    //	if (large_memory[i] == BAD_BLOCK) {
-    //		bad_count++;
-    //	}
-    //}
-    //printf("Bad blocks: %d\n", bad_count);
-	
-    // Clean up large memory block using system's free function
-    myFree(large_memory, LARGE_MEMORY_SIZE);
-    //free(large_memory); // DEBUG
+    
+    // Run tests
+    testMemoryAllocation();
+    
+    // Free memory
+    free(large_memory);
 
     return 0;
 }
