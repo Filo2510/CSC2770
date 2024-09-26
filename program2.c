@@ -44,12 +44,14 @@ void markBadBlocks(char *memory, size_t size, size_t badBlockCount) {
 void* myMalloc(size_t size) {
     // STUDENTS: Implement logic to allocate memory dynamically, ensuring that you skip over bad blocks
     int i = 0;
-    int bad_block_counter = 0; // Checks to make sure all bad blocks are accounted for. This is a debugging measure.
-    while (i < LARGE_MEMORY_SIZE) {
-    	if (memory[randomIndex] == BAD_BLOCK) {
+    while (i < MEMORY_SIZE) {
+    	if (memory[i] == BAD_BLOCK) {
     		bad_block_counter += 1;
     		continue;
     	}
+    	//printf("i = %d.\n", i);
+    	//printf("Bad blocks: %d.\n", bad_block_counter);
+    	i++;
     }
     return NULL; // Placeholder return value
 }
@@ -57,7 +59,9 @@ void* myMalloc(size_t size) {
 // Skeleton function: Free the allocated memory
 void myFree(void *ptr) {
     // STUDENTS: Implement logic to free the allocated memory
-    delete[] memory;
+    for (int i = 0; i < LARGE_MEMORY_SIZE; i++) {
+    	memory[i] = 0;
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -78,12 +82,14 @@ int main(int argc, char *argv[]) {
         printf("Failed to allocate large memory.\n");
         return 1;
     }
-
+    printf("Successfully allocated large memory\n"); //DEBUG
     // Mark some blocks as "bad"
     markBadBlocks(large_memory, LARGE_MEMORY_SIZE, 1000); // Mark 1000 bad blocks
+    printf("Bad blocks marked\n"); // DEBUG
 
     // Simulate memory allocation
     int *array = (int*)myMalloc(allocationSize * sizeof(int));  // Allocate memory for an array of integers
+    printf("myMalloc function did not crash\n"); //DEBUG
     if (array == NULL) {
         printf("Memory allocation failed.\n");
     } else {
@@ -98,8 +104,18 @@ int main(int argc, char *argv[]) {
         printf("Memory successfully freed.\n");
     }
 
+    // DEBUG
+    int bad_count = 0;
+    for (int i = 0; i < LARGE_MEMORY_SIZE; i++) {
+    	if (large_memory[i] == BAD_BLOCK) {
+    		bad_count++;
+    	}
+    }
+    printf("Bad blocks: %d\n", bad_count);
+	
     // Clean up large memory block using system's free function
-    myFree(large_memory);
+    //myFree(large_memory);
+    free(large_memory); // DEBUG
 
     return 0;
 }
