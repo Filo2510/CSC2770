@@ -43,12 +43,21 @@ void markBadBlocks(char *memory, size_t size, size_t badBlockCount) {
 // Skeleton function: Allocate memory dynamically, skipping bad blocks
 void* myMalloc(size_t size) {
     // STUDENTS: Implement logic to allocate memory dynamically, ensuring that you skip over bad blocks
+    int i = 0;
+    int bad_block_counter = 0; // Checks to make sure all bad blocks are accounted for. This is a debugging measure.
+    while (i < LARGE_MEMORY_SIZE) {
+    	if (memory[randomIndex] == BAD_BLOCK) {
+    		bad_block_counter += 1;
+    		continue;
+    	}
+    }
     return NULL; // Placeholder return value
 }
 
 // Skeleton function: Free the allocated memory
 void myFree(void *ptr) {
     // STUDENTS: Implement logic to free the allocated memory
+    delete[] memory;
 }
 
 int main(int argc, char *argv[]) {
