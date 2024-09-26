@@ -44,7 +44,10 @@ void markBadBlocks(char *memory, size_t size, size_t badBlockCount) {
 // Skeleton function: Allocate memory dynamically, skipping bad blocks
 void* myMalloc(size_t size) {
     // STUDENTS: Implement logic to allocate memory dynamically, ensuring that you skip over bad blocks
-    
+    if (size > MEMORY_SIZE) {
+    	printf("DEBUG: The size argument was greater than the available space!\n");
+    	return NULL;
+    }
     // Ensure that bad blocks in the large memory are reflected in the normal memory.
     //*(large_memory + 11) = BAD_BLOCK; // DEBUG
     for (int x = 0; x < MEMORY_SIZE; x++) {
