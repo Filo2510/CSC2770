@@ -80,7 +80,7 @@ void* myMalloc(size_t size) {
     			j++;
     		}
     		printf("DEBUG: Valid memory found from indices %d to %d\n", i, i + size - 1);
-    		return NULL;
+    		return memory + i;
     	}
     	//printf("i = %d.\n", i);
     	//printf("Bad blocks: %d.\n", bad_block_counter);
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
             array[i] = i * i;  // Assign square of index
             printf("Array[%d] = %d\n", i, array[i]);
         }
-
+	printf("Successfully ran myMalloc\n");
         // Free the allocated memory
         myFree(array);
         printf("Memory successfully freed.\n");
@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
     printf("Bad blocks: %d\n", bad_count);
 	
     // Clean up large memory block using system's free function
-    //myFree(large_memory);
+    myFree(large_memory);
     free(large_memory); // DEBUG
 
     return 0;
