@@ -44,16 +44,25 @@ void markBadBlocks(char *memory, size_t size, size_t badBlockCount) {
 // Skeleton function: Allocate memory dynamically, skipping bad blocks
 void* myMalloc(size_t size) {
     // STUDENTS: Implement logic to allocate memory dynamically, ensuring that you skip over bad blocks
-    int i = 0;
-    int j = 1;
-    int end;
     
-    //*(memory + 10) = BAD_BLOCK; // DEBUG to test handling of bad blocks
+    // Ensure that bad blocks in the large memory are reflected in the normal memory.
+    //*(large_memory + 11) = BAD_BLOCK; // DEBUG
+    for (int x = 0; x < MEMORY_SIZE; x++) {
+    	if (*(large_memory + x) == BAD_BLOCK) {
+    		*(memory + x) = BAD_BLOCK;
+    		printf("DEBUG: BAD BLOCK FOUND at %d\n", x);
+    	}
+    }
+    
+    int i = 0; // Keeps track of the start of a hypothetical allocated section.
+    int j = 1; // Scans a hypothetical allocated section for bad blocks.
+    
+    //*(memory = BAD_BLOCK; // DEBUG to test handling of bad blocks
     //*(memory + 21) = BAD_BLOCK; // DEBUG
     printf("Value at index 10: %c\n", *(memory + 10)); // DEBUG to test memory array
     
     while (i < MEMORY_SIZE) { // May need to adjust this condition to avoid being out of bounds or to loop around.
-    	bool canUseBlock = false;
+    	//bool canUseBlock = false;
     	if (*(memory + i) != BAD_BLOCK) {
     	
     		// Let i be the starting point of the hypothetical allocated memory. j starts at the second potential index.
