@@ -50,7 +50,7 @@ void* myMalloc(size_t size) {
     for (int x = 0; x < MEMORY_SIZE; x++) {
     	if (*(large_memory + x) == BAD_BLOCK) {
     		*(memory + x) = BAD_BLOCK;
-    		printf("DEBUG: BAD BLOCK FOUND at %d\n", x);
+    		//printf("DEBUG: BAD BLOCK FOUND at %d\n", x);
     	}
     }
     
@@ -59,7 +59,7 @@ void* myMalloc(size_t size) {
     
     //*(memory = BAD_BLOCK; // DEBUG to test handling of bad blocks
     //*(memory + 21) = BAD_BLOCK; // DEBUG
-    printf("Value at index 10: %c\n", *(memory + 10)); // DEBUG to test memory array
+    //printf("Value at index 10: %c\n", *(memory + 10)); // DEBUG to test memory array
     
     while (i < MEMORY_SIZE) { // May need to adjust this condition to avoid being out of bounds or to loop around.
     	//bool canUseBlock = false;
@@ -69,12 +69,12 @@ void* myMalloc(size_t size) {
     		j = i + 1;
     		// Since i keeps track of the start of the allocated memory, j scans the other potential indices for bad blocks.
     		while (j < i + size) {
-    			printf("j = %d\n", j); // DEBUG
+    			//printf("j = %d\n", j); // DEBUG
     			// If a bad block is found by j, move i immediately after j. This effectively disregards all possible
     			// sections of memory that could include this particular bad block.
     			if (*(memory + j) == BAD_BLOCK) {
     				i = j + 1;
-    				printf("DEBUG: Bad block found at index %d\n", j);
+    				//printf("DEBUG: Bad block found at index %d\n", j);
     				//canUseBlock = false;
     			}
     			j++;
@@ -90,10 +90,11 @@ void* myMalloc(size_t size) {
 }
 
 // Skeleton function: Free the allocated memory
-void myFree(void *ptr) {
+void myFree(void *ptr, int size) {
+	char *array = (char*)ptr;
     // STUDENTS: Implement logic to free the allocated memory
-    for (int i = 0; i < LARGE_MEMORY_SIZE; i++) {
-    	memory[i] = 0;
+    for (int i = 0; i < size; i++) {
+    	*(array + i) = '\0'; // To clear the array, replace each element with the default character.
     }
 }
 
@@ -115,14 +116,14 @@ int main(int argc, char *argv[]) {
         printf("Failed to allocate large memory.\n");
         return 1;
     }
-    printf("Successfully allocated large memory\n"); //DEBUG
+    //printf("Successfully allocated large memory\n"); //DEBUG
     // Mark some blocks as "bad"
     markBadBlocks(large_memory, LARGE_MEMORY_SIZE, 1000); // Mark 1000 bad blocks
-    printf("Bad blocks marked\n"); // DEBUG
+    //printf("Bad blocks marked\n"); // DEBUG
 
     // Simulate memory allocation
     int *array = (int*)myMalloc(allocationSize * sizeof(int));  // Allocate memory for an array of integers
-    printf("myMalloc function did not crash\n"); //DEBUG
+    //printf("myMalloc function did not crash\n"); //DEBUG
     if (array == NULL) {
         printf("Memory allocation failed.\n");
     } else {
@@ -131,24 +132,24 @@ int main(int argc, char *argv[]) {
             array[i] = i * i;  // Assign square of index
             printf("Array[%d] = %d\n", i, array[i]);
         }
-	printf("Successfully ran myMalloc\n");
+	//printf("DEBUG: Successfully ran myMalloc\n");
         // Free the allocated memory
-        myFree(array);
+        myFree(array, allocationSize);
         printf("Memory successfully freed.\n");
     }
 
     // DEBUG
-    int bad_count = 0;
-    for (int i = 0; i < MEMORY_SIZE; i++) {
-    	if (large_memory[i] == BAD_BLOCK) {
-    		bad_count++;
-    	}
-    }
-    printf("Bad blocks: %d\n", bad_count);
+    //int bad_count = 0;
+    //for (int i = 0; i < LARGE_MEMORY_SIZE; i++) {
+    //	if (large_memory[i] == BAD_BLOCK) {
+    //		bad_count++;
+    //	}
+    //}
+    //printf("Bad blocks: %d\n", bad_count);
 	
     // Clean up large memory block using system's free function
-    myFree(large_memory);
-    free(large_memory); // DEBUG
+    myFree(large_memory, LARGE_MEMORY_SIZE);
+    //free(large_memory); // DEBUG
 
     return 0;
 }
