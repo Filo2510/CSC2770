@@ -55,33 +55,21 @@ void* myMalloc(size_t size) {
     while (i < MEMORY_SIZE) { // May need to adjust this condition to avoid being out of bounds or to loop around.
     	bool canUseBlock = false;
     	if (*(memory + i) != BAD_BLOCK) {
-    		// Let i be the starting point of the hypothetical allocated memory. Scan every index that may be
-    		// included to make sure it is not a bad block.
-    		
+    	
+    		// Let i be the starting point of the hypothetical allocated memory. j starts at the second potential index.
     		j = i + 1;
+    		// Since i keeps track of the start of the allocated memory, j scans the other potential indices for bad blocks.
     		while (j < i + size) {
     			printf("j = %d\n", j); // DEBUG
+    			// If a bad block is found by j, move i immediately after j. This effectively disregards all possible
+    			// sections of memory that could include this particular bad block.
     			if (*(memory + j) == BAD_BLOCK) {
-    				i = j + 1; // Move i so that it is located immediately after the bad block.
+    				i = j + 1;
     				printf("DEBUG: Bad block found at index %d\n", j);
     				//canUseBlock = false;
     			}
     			j++;
     		}
-    		
-    		//if (canUseBlock)
-    		
-    		//for (j = i + 1; j < i + size; j++) {
-    		//	printf("j = %d", j); // DEBUG
-    		//	if (*(memory + j) == BAD_BLOCK) {
-    		//		i = j + 1; // Move i so that it is located immediately after the bad block.
-    		//		printf("DEBUG: Bad block found at index %d\n", j);
-    		//		cannotUseBlock = true;
-    		//	}
-  		//	if (cannotUseBlock) {
-  		//		break;
-  		//	}
-    		//}
     		printf("DEBUG: Valid memory found from indices %d to %d\n", i, i + size - 1);
     		return NULL;
     	}
