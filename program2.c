@@ -1,4 +1,5 @@
 // Authors: Parker Lovin and Filoubatir Fadel
+// TO-DO: Add wrapping
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,10 +45,45 @@ void markBadBlocks(char *memory, size_t size, size_t badBlockCount) {
 void* myMalloc(size_t size) {
     // STUDENTS: Implement logic to allocate memory dynamically, ensuring that you skip over bad blocks
     int i = 0;
-    while (i < MEMORY_SIZE) {
-    	if (memory[i] == BAD_BLOCK) {
-    		bad_block_counter += 1;
-    		continue;
+    int j = 1;
+    int end;
+    
+    //*(memory + 10) = BAD_BLOCK; // DEBUG to test handling of bad blocks
+    //*(memory + 21) = BAD_BLOCK; // DEBUG
+    printf("Value at index 10: %c\n", *(memory + 10)); // DEBUG to test memory array
+    
+    while (i < MEMORY_SIZE) { // May need to adjust this condition to avoid being out of bounds or to loop around.
+    	bool canUseBlock = false;
+    	if (*(memory + i) != BAD_BLOCK) {
+    		// Let i be the starting point of the hypothetical allocated memory. Scan every index that may be
+    		// included to make sure it is not a bad block.
+    		
+    		j = i + 1;
+    		while (j < i + size) {
+    			printf("j = %d\n", j); // DEBUG
+    			if (*(memory + j) == BAD_BLOCK) {
+    				i = j + 1; // Move i so that it is located immediately after the bad block.
+    				printf("DEBUG: Bad block found at index %d\n", j);
+    				//canUseBlock = false;
+    			}
+    			j++;
+    		}
+    		
+    		//if (canUseBlock)
+    		
+    		//for (j = i + 1; j < i + size; j++) {
+    		//	printf("j = %d", j); // DEBUG
+    		//	if (*(memory + j) == BAD_BLOCK) {
+    		//		i = j + 1; // Move i so that it is located immediately after the bad block.
+    		//		printf("DEBUG: Bad block found at index %d\n", j);
+    		//		cannotUseBlock = true;
+    		//	}
+  		//	if (cannotUseBlock) {
+  		//		break;
+  		//	}
+    		//}
+    		printf("DEBUG: Valid memory found from indices %d to %d\n", i, i + size - 1);
+    		return NULL;
     	}
     	//printf("i = %d.\n", i);
     	//printf("Bad blocks: %d.\n", bad_block_counter);
@@ -106,7 +142,7 @@ int main(int argc, char *argv[]) {
 
     // DEBUG
     int bad_count = 0;
-    for (int i = 0; i < LARGE_MEMORY_SIZE; i++) {
+    for (int i = 0; i < MEMORY_SIZE; i++) {
     	if (large_memory[i] == BAD_BLOCK) {
     		bad_count++;
     	}
