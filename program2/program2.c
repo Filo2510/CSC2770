@@ -41,60 +41,45 @@ void markBadBlocks(char *memory, size_t size, size_t badBlockCount) {
     }
 }
 
-// Skeleton function: Allocate memory dynamically, skipping bad blocks
+// Allocate memory dynamically, skipping bad blocks
 void* myMalloc(size_t size) {
     // STUDENTS: Implement logic to allocate memory dynamically, ensuring that you skip over bad blocks
     if (size > MEMORY_SIZE) {
-    	printf("DEBUG: The size argument was greater than the available space!\n");
     	return NULL;
     }
     // Ensure that bad blocks in the large memory are reflected in the normal memory.
-    //*(large_memory + 11) = BAD_BLOCK; // DEBUG
     for (int x = 0; x < MEMORY_SIZE; x++) {
     	if (*(large_memory + x) == BAD_BLOCK) {
     		*(memory + x) = BAD_BLOCK;
-    		//printf("DEBUG: BAD BLOCK FOUND at %d\n", x);
     	}
     }
     
     int i = 0; // Keeps track of the start of a hypothetical allocated section.
     int j = 1; // Scans a hypothetical allocated section for bad blocks.
     
-    //*(memory = BAD_BLOCK; // DEBUG to test handling of bad blocks
-    //*(memory + 21) = BAD_BLOCK; // DEBUG
-    //printf("Value at index 10: %c\n", *(memory + 10)); // DEBUG to test memory array
-    
-    while (i < MEMORY_SIZE) { // May need to adjust this condition to avoid being out of bounds or to loop around.
-    	//bool canUseBlock = false;
+    while (i < MEMORY_SIZE) {
     	if (*(memory + i) != BAD_BLOCK) {
-    	
     		// Let i be the starting point of the hypothetical allocated memory. j starts at the second potential index.
     		j = i + 1;
     		// Since i keeps track of the start of the allocated memory, j scans the other potential indices for bad blocks.
     		while (j < i + size) {
-    			//printf("j = %d\n", j); // DEBUG
     			// If a bad block is found by j, move i immediately after j. This effectively disregards all possible
     			// sections of memory that could include this particular bad block.
     			if (*(memory + j) == BAD_BLOCK) {
     				i = j + 1;
-    				//printf("DEBUG: Bad block found at index %d\n", j);
-    				//canUseBlock = false;
     			}
     			j++;
     		}
-    		printf("DEBUG: Valid memory found from indices %d to %d\n", i, i + size - 1);
     		return memory + i;
     	}
-    	//printf("i = %d.\n", i);
-    	//printf("Bad blocks: %d.\n", bad_block_counter);
     	i++;
     }
     return NULL; // Placeholder return value
 }
 
-// Skeleton function: Free the allocated memory
+// Free the allocated memory
 void myFree(void *ptr, int size) {
-	char *array = (char*)ptr;
+    char *array = (char*)ptr;
     // STUDENTS: Implement logic to free the allocated memory
     for (int i = 0; i < size; i++) {
     	*(array + i) = '\0'; // To clear the array, replace each element with the default character.
@@ -119,14 +104,12 @@ int main(int argc, char *argv[]) {
         printf("Failed to allocate large memory.\n");
         return 1;
     }
-    //printf("Successfully allocated large memory\n"); //DEBUG
+
     // Mark some blocks as "bad"
     markBadBlocks(large_memory, LARGE_MEMORY_SIZE, 1000); // Mark 1000 bad blocks
-    //printf("Bad blocks marked\n"); // DEBUG
 
     // Simulate memory allocation
     int *array = (int*)myMalloc(allocationSize * sizeof(int));  // Allocate memory for an array of integers
-    //printf("myMalloc function did not crash\n"); //DEBUG
     if (array == NULL) {
         printf("Memory allocation failed.\n");
     } else {
@@ -135,24 +118,14 @@ int main(int argc, char *argv[]) {
             array[i] = i * i;  // Assign square of index
             printf("Array[%d] = %d\n", i, array[i]);
         }
-	//printf("DEBUG: Successfully ran myMalloc\n");
+
         // Free the allocated memory
         myFree(array, allocationSize);
         printf("Memory successfully freed.\n");
     }
-
-    // DEBUG
-    //int bad_count = 0;
-    //for (int i = 0; i < LARGE_MEMORY_SIZE; i++) {
-    //	if (large_memory[i] == BAD_BLOCK) {
-    //		bad_count++;
-    //	}
-    //}
-    //printf("Bad blocks: %d\n", bad_count);
 	
     // Clean up large memory block using system's free function
     myFree(large_memory, LARGE_MEMORY_SIZE);
-    //free(large_memory); // DEBUG
 
     return 0;
 }
