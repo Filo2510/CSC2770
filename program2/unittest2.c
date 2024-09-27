@@ -1,5 +1,6 @@
 // Authors: Parker Lovin and Filoubatir Fadel
-// TO-DO: Add wrapping
+// Course: CSC-2770-001
+// Date: 9/26/2024
 
 #include <stdio.h>
 #include <stdlib.h>
