@@ -1,5 +1,6 @@
 // Authors: Parker Lovin and Filoubatir Fadel
-// TO-DO: Add wrapping
+// Course: CSC-2770-001
+// Date: 9/26/2024
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,7 +45,7 @@ void markBadBlocks(char *memory, size_t size, size_t badBlockCount) {
 // Allocate memory dynamically, skipping bad blocks
 void* myMalloc(size_t size) {
     // STUDENTS: Implement logic to allocate memory dynamically, ensuring that you skip over bad blocks
-    if (size > MEMORY_SIZE) {
+    if (size > MEMORY_SIZE) { // Handle the event in which an excessive size value is passed as an argument.
     	return NULL;
     }
     // Ensure that bad blocks in the large memory are reflected in the normal memory.
@@ -59,18 +60,18 @@ void* myMalloc(size_t size) {
     
     while (i < MEMORY_SIZE) {
     	if (*(memory + i) != BAD_BLOCK) {
-    		// Let i be the starting point of the hypothetical allocated memory. j starts at the second potential index.
+    		// Let i be the first index of the hypothetical allocated memory. j starts at the second potential index.
     		j = i + 1;
     		// Since i keeps track of the start of the allocated memory, j scans the other potential indices for bad blocks.
     		while (j < i + size) {
-    			// If a bad block is found by j, move i immediately after j. This effectively disregards all possible
-    			// sections of memory that could include this particular bad block.
+    			// If a bad block is found by j, move i to the position immediately after j. This effectively disregards
+    			// all possible sections of memory that could include this particular bad block.
     			if (*(memory + j) == BAD_BLOCK) {
     				i = j + 1;
     			}
     			j++;
     		}
-    		return memory + i;
+    		return memory + i; // Return the starting index of the array.
     	}
     	i++;
     }
