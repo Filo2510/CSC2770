@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
 
 #define PORT 8080
 #define MAX_PACKET_SIZE 150  // Limit packet size to 150 bytes
@@ -30,7 +31,7 @@ int main() {
 // Function to create the client socket
 int create_client_socket() {
     // TODO: Implement client socket creation
-    return 0;
+    return socket(AF_INET, SOCK_DGRAM, 0);
 }
 
 // Function to connect the client to the server
