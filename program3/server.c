@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
 
 #define PORT 8080
 #define MAX_PACKET_SIZE 150  // Limit packet size to 150 bytes
@@ -36,12 +37,14 @@ int main() {
 // Function to create the server socket
 int create_server_socket() {
     // TODO: Implement server socket creation
-    return 0;
+    int server_fd = socket(AF_INET, SOCK_DGRAM, 0);
+    return server_fd;
 }
 
 // Function to bind the server socket to an address and port
 void bind_server_socket(int server_fd, struct sockaddr_in *address) {
     // TODO: Implement binding the server socket to an address
+    bind(server_fd, (struct sockaddr*)&address, sizeof(address));
 }
 
 // Function to listen for incoming connections

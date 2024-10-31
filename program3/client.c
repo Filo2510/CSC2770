@@ -37,14 +37,21 @@ int create_client_socket() {
 // Function to connect the client to the server
 void connect_to_server(int client_socket, struct sockaddr_in *serv_addr) {
     // TODO: Implement connecting the client to the server
+    if(connect(client_socket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
+    { 
+        printf("\n Error : Connect Failed \n"); 
+        exit(0); 
+    } 
 }
 
 // Function to send an arbitrarily long message to the server
 void send_message(int client_socket, const char *message) {
     // TODO: Implement message sending in chunks of 150 bytes
+    // sendto(client_socket, message, strlen(message), 0, (struct sockaddr*)NULL, sizeof(servaddr)); 
 }
 
 // Function to close the client socket
 void close_client_socket(int client_socket) {
     // TODO: Implement closing the client socket
+    close(client_socket);
 }
