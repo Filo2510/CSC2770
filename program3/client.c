@@ -47,7 +47,17 @@ void connect_to_server(int client_socket, struct sockaddr_in *serv_addr) {
 // Function to send an arbitrarily long message to the server
 void send_message(int client_socket, const char *message) {
     // TODO: Implement message sending in chunks of 150 bytes
-    // sendto(client_socket, message, strlen(message), 0, (struct sockaddr*)NULL, sizeof(servaddr)); 
+    // sendto(client_socket, message, strlen(message), 0, (struct sockaddr*)NULL, sizeof(servaddr));
+    int message_len = strlen(message);
+    int bytes_sent = 0;
+    while (bytes_sent < message_len) {
+    	int bytes_to_send = (message_len - bytes_sent)
+    	if (sendto(client_socket, message + bytes_sent, bytes_to_send, 0, (const struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
+    		pererror("sendto failed");	// NOTE: Consider updating wording for this line
+    		exit(EXIT_FAILURE)
+    	bytes_sent += bytes_to_send;
+    	}
+    }        
 }
 
 // Function to close the client socket
