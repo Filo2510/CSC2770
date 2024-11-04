@@ -12,7 +12,6 @@
 // Function declarations
 int create_server_socket();
 void bind_server_socket(int server_fd, struct sockaddr_in *address);
-void listen_for_connections(int server_fd);
 int accept_client_connection(int server_fd, struct sockaddr_in *address);
 void handle_client(int client_socket);
 void close_server_socket(int server_fd);
@@ -23,7 +22,6 @@ int main() {
     
     server_fd = create_server_socket();
     bind_server_socket(server_fd, &address);
-    listen_for_connections(server_fd);
 
     while (1) {
         client_socket = accept_client_connection(server_fd, &address);
@@ -47,15 +45,19 @@ void bind_server_socket(int server_fd, struct sockaddr_in *address) {
     bind(server_fd, (struct sockaddr*)&address, sizeof(address));
 }
 
-// Function to listen for incoming connections
-void listen_for_connections(int server_fd) {
-    // TODO: Implement listening for incoming connections
-}
-
 // Function to accept client connections
 int accept_client_connection(int server_fd, struct sockaddr_in *address) {
     // TODO: Implement accepting client connection
-    return 0;
+    char buffer[1024];
+    socklen_t addr_len = sizeof(address);
+    int bytes_recv = recvfrom(server_fd, buffer, sizeof(buffer), 0, (struct sockaddr *)&address, &addr_len);
+
+    if (bytes_recv < 0) {
+        perror("recvfrom failed");
+        return -1;
+    }
+
+    return 0; // Indicate successful connection
 }
 
 // Function to handle communication with the client
@@ -66,4 +68,5 @@ void handle_client(int client_socket) {
 // Function to close the server socket
 void close_server_socket(int server_fd) {
     // TODO: Implement closing the server socket
+    close(server_fd)
 }
