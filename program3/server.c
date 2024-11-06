@@ -63,7 +63,7 @@ int accept_client_connection(int server_fd, struct sockaddr_in *address) {
 // Function to handle communication with the client
 void handle_client(int client_socket) {
     // TODO: Implement the logic to receive and send data to the client
-    char buffer[1024];   
+    char buffer[1024];
 
     struct sockaddr_in client_addr;
     socklen_t addr_len = sizeof(client_addr);
@@ -91,5 +91,5 @@ void handle_client(int client_socket) {
 // Function to close the server socket
 void close_server_socket(int server_fd) {
     // TODO: Implement closing the server socket
-    close(server_fd)
+    close(server_fd);
 }
