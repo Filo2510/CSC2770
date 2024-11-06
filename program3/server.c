@@ -63,6 +63,29 @@ int accept_client_connection(int server_fd, struct sockaddr_in *address) {
 // Function to handle communication with the client
 void handle_client(int client_socket) {
     // TODO: Implement the logic to receive and send data to the client
+    char buffer[1024];   
+
+    struct sockaddr_in client_addr;
+    socklen_t addr_len = sizeof(client_addr);
+
+    while (1) {
+        // Receive a message from the client
+        int bytes_recv = recvfrom(client_socket, buffer, 1024, 0,
+                                  (struct sockaddr *)&client_addr, &addr_len);
+
+        if (bytes_recv < 0) {
+            perror("recvfrom failed");
+            exit(EXIT_FAILURE);
+        }
+
+        // Process the received message (replace this with your specific logic)
+        printf("Received message: %s\n", buffer);
+
+        // Send a response back to the client
+        const char *response = "Hello from the server!";
+        sendto(client_socket, response, strlen(response), 0,
+               (const struct sockaddr *)&client_addr, addr_len);
+    }
 }
 
 // Function to close the server socket
