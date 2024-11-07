@@ -50,6 +50,17 @@ void connect_to_server(int client_socket, struct sockaddr_in *serv_addr) {
 void send_message(int client_socket, const char *message) {
     int message_len = strlen(message);
     int bytes_sent = 0;
+    
+    // Don't send if there is only whitespace
+    bool whitespace_only = true;
+    for (const char *ptr = message; *ptr != '\0'; ++ptr) {
+    	if (!isspace(*ptr)) {
+    	    whitespace_only = false;
+    	    break;
+    }
+    if (whitespace_only) {
+    	return;
+    }
 
     while (bytes_sent < message_len) {
         int bytes_to_send = min(150, message_len - bytes_sent);
