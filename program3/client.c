@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <stdbool.h>
+#include <ctype.h>
 
 
 #define PORT 8080
@@ -14,7 +16,7 @@
 // Function declarations
 int create_client_socket();
 void connect_to_server(int client_socket, struct sockaddr_in *serv_addr);
-void send_message(int client_socket, const char *message);
+void send_message(int client_socket, const char *message, struct sockaddr_in *serv_addr);
 void close_client_socket(int client_socket);
 
 int main() {
@@ -24,7 +26,7 @@ int main() {
 
     client_socket = create_client_socket();
     connect_to_server(client_socket, &serv_addr);
-    send_message(client_socket, message);
+    send_message(client_socket, message, &serv_addr);
     close_client_socket(client_socket);
 
     return 0;
@@ -47,7 +49,7 @@ void connect_to_server(int client_socket, struct sockaddr_in *serv_addr) {
 }
 
 // Function to send an arbitrarily long message to the server
-void send_message(int client_socket, const char *message) {
+void send_message(int client_socket, const char *message, struct sockaddr_in *serv_addr) {	// IMPORTANT: We may need to rearrange the argument list depending on the professor's updated instructions!
     int message_len = strlen(message);
     int bytes_sent = 0;
     
@@ -57,6 +59,7 @@ void send_message(int client_socket, const char *message) {
     	if (!isspace(*ptr)) {
     	    whitespace_only = false;
     	    break;
+    	}
     }
     if (whitespace_only) {
     	return;
@@ -65,8 +68,7 @@ void send_message(int client_socket, const char *message) {
     while (bytes_sent < message_len) {
         int bytes_to_send = min(150, message_len - bytes_sent);
 
-        if (sendto(client_socket, message + bytes_sent, bytes_to_send, 0, 
-                   (const struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
+        if (sendto(client_socket, message + bytes_sent, bytes_to_send, 0, (const struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
             perror("sendto failed");
             exit(EXIT_FAILURE);
         }
